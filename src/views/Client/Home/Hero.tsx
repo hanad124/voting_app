@@ -1,65 +1,151 @@
-import { FiInbox } from "react-icons/fi";
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Vote, Users, Clock } from "lucide-react";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 import heroImage from "@/app/public/assets/president.svg";
 
-const Hero = () => {
+export default function HeroSection() {
+  const [voteCount, setVoteCount] = useState(3782);
+  const [candidateCount] = useState(42);
+  const controls = useAnimation();
+  const [ref, inView] = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [controls, inView]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVoteCount(
+        (prevCount) => prevCount + Math.floor(Math.random() * 3) + 1
+      );
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+  };
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-36 md:mt-28">
-        <div className="flex flex-col justify-center gap-7">
-          <h1 className="text-4xl md:text-5xl font-bold text-custom_secondary leading-snug md:leading-[4rem]">
-            Building a Brighter, Inclusive
-            <span className="text-primary ml-3">Future</span> Together Forever
-          </h1>
-          <p className="text-lg md:mr-16  font-light text-custom_textColor">
-            Participate in the University Student Voting and Election to Shape
-            the Future of Our Campus Community!
-          </p>
-          <div className="flex gap-6 items-center">
-            {/* button without icon */}
-            <button className="relative flex h-[50px] w-40 items-center justify-center overflow-hidden rounded-full bg-primary text-white shadow-2xl transition-all before:absolute before:h-0 before:w-0 before:rounded-full before:bg-[#323f7c] before:duration-500 before:ease-out hover:shadow-slate-600/50 hover:before:h-56 hover:before:w-56">
-              <span className="relative z-10">Get Started</span>
-            </button>
-            {/* button with icon */}
-            <button className="group relative flex h-[50px] w-44 items-center justify-center overflow-hidden rounded-full bg-[#F4F4F4] py-2 text-[#323f7c] shadow-2xl transition-all before:absolute before:h-0 before:w-0 before:rounded-full before:bg-[#323f7c] before:duration-500 before:ease-out hover:text-white hover:shadow-slate-600/50 hover:before:h-56 hover:before:w-56">
-              <div className="relative z-10 flex w-full items-center justify-center gap-3">
-                <span className=" text-center  font-medium">Vote Now</span>
-                <div className="group ">
-                  {/* <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="40"
-                    height="40"
-                    viewBox="0 0 59 59"
-                    fill="none"
-                  >
-                    <rect
-                      x="-0.00158691"
-                      y="0.000244141"
-                      width="59"
-                      height="59"
-                      rx="29.5"
-                      fill="#323f7c"
-                      className="group-hover:fill-white"
-                    />
-                    <path
-                      d="M25.6156 39.0002C25.347 38.9996 25.0831 38.9122 24.8499 38.7464C24.3248 38.3769 23.9984 37.6595 23.9984 36.8807V21.1199C23.9984 20.3389 24.3248 19.6237 24.8499 19.2541C25.0886 19.0837 25.3598 18.9961 25.6352 19.0004C25.9105 19.0047 26.1799 19.1008 26.4151 19.2786L37.26 27.3416C37.486 27.5176 37.6724 27.7621 37.8015 28.052C37.9307 28.3419 37.9984 28.6679 37.9984 28.9992C37.9984 29.3306 37.9307 29.6565 37.8015 29.9464C37.6724 30.2363 37.486 30.4808 37.26 30.6568L26.4133 38.722C26.1726 38.9027 25.8969 38.9989 25.6156 39.0002Z"
-                      fill="white"
-                      className="group-hover:fill-[#323f7c]"
-                    />
-                  </svg> */}
-                  <FiInbox className="w-4 h-4" />
+    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-white mt-16 md:mt-0">
+      <div className="absolute inset-0 bg-[url('/light-pattern.svg')] opacity-5"></div>
+      <div className="container relative z-10 mx-auto px-4 py-20 md:px-6 md:py-32">
+        <motion.div
+          ref={ref}
+          animate={controls}
+          initial="hidden"
+          variants={containerVariants}
+          className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center"
+        >
+          <div className="flex flex-col justify-center space-y-8">
+            <motion.div variants={itemVariants} className="space-y-6">
+              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+                <span className="bg-gradient-to-r from-slate-600 to-slate-900 bg-clip-text text-transparent">
+                  Empower Your Campus
+                </span>
+                <br />
+                <span className="text-slate-800">Vote for Change</span>
+              </h1>
+              <p className="max-w-[600px] text-xl text-slate-600 md:text-2xl">
+                Participate in the digital transformation of student governance.
+                Your vote is the cornerstone of campus evolution.
+              </p>
+            </motion.div>
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col gap-4 sm:flex-row"
+            >
+              <Button
+                size="lg"
+                className="group bg-slate-800 text-white hover:bg-slate-700 text-lg px-8 py-6 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-slate-300/50"
+              >
+                Cast Your Vote
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-slate-400 text-slate-800 hover:bg-slate-100 text-lg px-8 py-6 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-slate-200/50"
+              >
+                Meet Candidates
+              </Button>
+            </motion.div>
+          </div>
+          <div className="relative aspect-square">
+            <motion.div
+              variants={itemVariants}
+              className="absolute inset-0 bg-gradient-to-br from-slate-200/50 to-slate-300/50 rounded-full"
+            ></motion.div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-4 border-4 border-dashed border-slate-300 rounded-full"
+            ></motion.div>
+            <motion.div
+              variants={itemVariants}
+              className="absolute inset-8 overflow-hidden rounded-full bg-gradient-to-br from-slate-100 to-white shadow-xl"
+            >
+              <Image
+                src={heroImage}
+                width={500}
+                height={500}
+                alt="Diverse university students"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-200/30 to-white/30"></div>
+            </motion.div>
+            <motion.div
+              variants={itemVariants}
+              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg w-full max-w-sm"
+            >
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Vote className="h-8 w-8 mx-auto mb-2 text-slate-600" />
+                  <div className="text-2xl font-bold text-slate-800">
+                    {voteCount.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-slate-500">Votes Cast</div>
+                </div>
+                <div>
+                  <Users className="h-8 w-8 mx-auto mb-2 text-slate-600" />
+                  <div className="text-2xl font-bold text-slate-800">
+                    {candidateCount}
+                  </div>
+                  <div className="text-sm text-slate-500">Candidates</div>
+                </div>
+                <div>
+                  <Clock className="h-8 w-8 mx-auto mb-2 text-slate-600" />
+                  <div className="text-2xl font-bold text-slate-800">24h</div>
+                  <div className="text-sm text-slate-500">Time Left</div>
                 </div>
               </div>
-            </button>
+            </motion.div>
           </div>
-        </div>
-        <div className="md:ml-0 lg:ml-44">
-          <Image src={heroImage} alt="hero image" width={340} height={200} />
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default Hero;
+}
